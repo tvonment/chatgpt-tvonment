@@ -5,7 +5,7 @@ import {
   ChatThreadModel,
   MESSAGE_ATTRIBUTE,
 } from "../chat/chat-services/models";
-import { CosmosDBContainer } from "../common/cosmos";
+import { CosmosDBContainer } from "../common/history";
 
 export const FindAllChatThreadsForReporting = async (
   pageSize = 10,
@@ -14,9 +14,8 @@ export const FindAllChatThreadsForReporting = async (
   const container = await CosmosDBContainer.getInstance().getContainer();
 
   const querySpec: SqlQuerySpec = {
-    query: `SELECT * FROM root r WHERE r.type=@type ORDER BY r.createdAt DESC OFFSET ${
-      pageNumber * pageSize
-    } LIMIT ${pageSize}`,
+    query: `SELECT * FROM root r WHERE r.type=@type ORDER BY r.createdAt DESC OFFSET ${pageNumber * pageSize
+      } LIMIT ${pageSize}`,
     parameters: [
       {
         name: "@type",

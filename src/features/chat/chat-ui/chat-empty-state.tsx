@@ -7,6 +7,7 @@ import { FC, useState } from "react";
 import { ChatType, ConversationStyle } from "../chat-services/models";
 import { ChatStyleSelector } from "./chat-style-selector";
 import { ChatTypeSelector } from "./chat-type-selector";
+
 interface Prop {
   isUploadingFile: boolean;
   chatType: ChatType;
@@ -47,7 +48,16 @@ export const EmptyState: FC<Prop> = (props) => {
         <Typography variant="h4" className="text-primary">
           Personalise
         </Typography>
-
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-muted-foreground">
+            Choose a bot profile
+          </p>
+          <select name="profiles" id="profiles">
+            <option value="yoda">Yoda</option>
+            <option value="gandalf">Gandalf</option>
+            <option value="groot">Groot</option>
+          </select>
+        </div>
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">
             Choose a conversation style

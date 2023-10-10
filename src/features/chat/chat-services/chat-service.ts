@@ -3,7 +3,7 @@ import "server-only";
 
 import { SqlQuerySpec } from "@azure/cosmos";
 import { nanoid } from "nanoid";
-import { CosmosDBContainer } from "../../common/cosmos";
+import { CosmosDBContainer } from "../../common/history";
 import { ChatMessageModel, MESSAGE_ATTRIBUTE } from "./models";
 
 export const FindAllChats = async (chatThreadID: string) => {

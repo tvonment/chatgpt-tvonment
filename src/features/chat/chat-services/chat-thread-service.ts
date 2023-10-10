@@ -5,7 +5,7 @@ import { userHashedId, userSession } from "@/features/auth/helpers";
 import { FindAllChats } from "@/features/chat/chat-services/chat-service";
 import { SqlQuerySpec } from "@azure/cosmos";
 import { nanoid } from "nanoid";
-import { CosmosDBContainer } from "../../common/cosmos";
+import { CosmosDBContainer } from "../../common/history";
 import {
   CHAT_THREAD_ATTRIBUTE,
   ChatMessageModel,

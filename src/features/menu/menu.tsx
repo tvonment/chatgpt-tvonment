@@ -46,11 +46,13 @@ export const MainMenu = () => {
           </Link>
         </Button>
         <Button
-          onClick={toggleMenu}
+          asChild
           className="rounded-full w-[40px] h-[40px] p-2 text-primary"
           variant={"outline"}
         >
-          {isMenuOpen ? <PanelLeftClose /> : <PanelRightClose />}
+          <Link href="/sysmessage" title="System Message">
+            <MessageCircle />
+          </Link>
         </Button>
         {session?.user?.isAdmin ? (
           <Button

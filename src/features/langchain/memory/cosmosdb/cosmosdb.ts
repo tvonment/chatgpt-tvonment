@@ -2,7 +2,7 @@ import {
   ChatMessageModel,
   MESSAGE_ATTRIBUTE,
 } from "@/features/chat/chat-services/models";
-import { CosmosDBContainer } from "@/features/common/cosmos";
+import { CosmosDBContainer } from "@/features/common/history";
 import {
   AIMessage,
   BaseListChatMessageHistory,

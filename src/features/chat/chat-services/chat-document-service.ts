@@ -1,7 +1,7 @@
 "use server";
 
 import { userHashedId } from "@/features/auth/helpers";
-import { CosmosDBContainer } from "@/features/common/cosmos";
+import { CosmosDBContainer } from "@/features/common/history";
 import { AzureCogSearch } from "@/features/langchain/vector-stores/azure-cog-search/azure-cog-vector-store";
 import {
   AzureKeyCredential,

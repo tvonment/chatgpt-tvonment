@@ -45,13 +45,6 @@ export const MainMenu = () => {
             <MessageCircle />
           </Link>
         </Button>
-        <Button
-          onClick={toggleMenu}
-          className="rounded-full w-[40px] h-[40px] p-2 text-primary"
-          variant={"outline"}
-        >
-          {isMenuOpen ? <PanelLeftClose /> : <PanelRightClose />}
-        </Button>
         {session?.user?.isAdmin ? (
           <Button
             asChild

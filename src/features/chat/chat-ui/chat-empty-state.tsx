@@ -4,16 +4,19 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ArrowUpCircle, Loader2 } from "lucide-react";
 import { FC, useState } from "react";
-import { ChatType, ConversationStyle } from "../chat-services/models";
+import { ChatProfile, ChatType, ConversationStyle } from "../chat-services/models";
 import { ChatStyleSelector } from "./chat-style-selector";
 import { ChatTypeSelector } from "./chat-type-selector";
+import { ChatProfileSelector } from "./chat-profile-selector";
 
 interface Prop {
   isUploadingFile: boolean;
   chatType: ChatType;
+  chatProfile: ChatProfile;
   conversationStyle: ConversationStyle;
   uploadButtonLabel: string;
   onChatTypeChange: (value: ChatType) => void;
+  onChatProfileChange: (value: ChatProfile) => void;
   onConversationStyleChange: (value: ConversationStyle) => void;
   onFileChange: (file: FormData) => void;
 }
@@ -52,11 +55,11 @@ export const EmptyState: FC<Prop> = (props) => {
           <p className="text-sm text-muted-foreground">
             Choose a bot profile
           </p>
-          <select name="profiles" id="profiles">
-            <option value="yoda">Yoda</option>
-            <option value="gandalf">Gandalf</option>
-            <option value="groot">Groot</option>
-          </select>
+          <ChatProfileSelector
+            chatProfile={props.chatProfile}
+            onChatProfileChange={props.onChatProfileChange}
+            disable={false}
+          />
         </div>
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">

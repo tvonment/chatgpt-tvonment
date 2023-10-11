@@ -18,8 +18,8 @@ export interface ChatMessageModel {
 
 export type ConversationStyle = "creative" | "balanced" | "precise";
 export type ChatType = "simple" | "data" | "mssql";
-
 export type ChatRole = "system" | "user" | "assistant" | "function";
+export type ChatProfile = "default" | "yoda" | "kid";
 
 export interface ChatThreadModel {
   id: string;
@@ -28,6 +28,7 @@ export interface ChatThreadModel {
   userId: string;
   useName: string;
   isDeleted: boolean;
+  chatProfile: ChatProfile;
   chatType: ChatType;
   conversationStyle: ConversationStyle;
   chatOverFileName: string;
@@ -37,6 +38,7 @@ export interface ChatThreadModel {
 export interface PromptGPTBody {
   id: string; // thread id
   chatType: ChatType;
+  chatProfile: ChatProfile;
   conversationStyle: ConversationStyle;
   chatOverFileName: string;
 }

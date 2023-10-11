@@ -175,6 +175,7 @@ export const CreateChatThread = async () => {
     isDeleted: false,
     chatType: "simple",
     conversationStyle: "precise",
+    chatProfile: "default",
     type: CHAT_THREAD_ATTRIBUTE,
     chatOverFileName: ""
   };

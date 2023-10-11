@@ -74,10 +74,10 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
     reserved: true
   }
   sku: {
-    name: 'P0v3'
-    tier: 'Premium0V3'
-    size: 'P0v3'
-    family: 'Pv3'
+    name: 'B1'
+    tier: 'Basic'
+    size: 'B1'
+    family: 'B'
     capacity: 1
   }
   kind: 'linux'
@@ -96,7 +96,19 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
       appCommandLine: 'next start'
       ftpsState: 'Disabled'
       minTlsVersion: '1.2'
-      appSettings: [ 
+      appSettings: [
+        {
+          name: 'AZURE_AD_CLIENT_ID'
+          value: 'a73ee13c-6d8a-48be-b616-023c4b5032fa'
+        }
+        {
+          name: 'AZURE_AD_CLIENT_SECRET'
+          value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=AZURE-AD-CLIENT-SECRET)'
+        }
+        {
+          name: 'AZURE_AD_TENANT_ID'
+          value: '5f2f9f5d-6106-4f23-9efc-53764d492772'
+        }
         {
           name: 'AZURE_COSMOSDB_KEY'
           value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=${kv::AZURE_COSMOSDB_KEY.name})'
@@ -113,23 +125,23 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
           name: 'AZURE_SEARCH_API_KEY'
           value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=${kv::AZURE_SEARCH_API_KEY.name})'
         }
-        { 
+        {
           name: 'AZURE_SEARCH_API_VERSION'
           value: searchServiceAPIVersion
         }
-        { 
+        {
           name: 'AZURE_SEARCH_NAME'
           value: search_name
         }
-        { 
+        {
           name: 'AZURE_SEARCH_INDEX_NAME'
           value: searchServiceIndexName
         }
-        { 
+        {
           name: 'AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT'
           value: 'https://${location}.api.cognitive.microsoft.com/'
         }
-        { 
+        {
           name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
           value: 'true'
         }
@@ -159,12 +171,12 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
         }
         {
           name: 'NEXTAUTH_URL'
-          value: 'https://${webapp_name}.azurewebsites.net'
+          value: 'https://chat.vonmentlen.info'
         }
       ]
     }
   }
-  identity: { type: 'SystemAssigned'}
+  identity: { type: 'SystemAssigned' }
 }
 
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
@@ -263,7 +275,11 @@ resource cosmosDbAccount 'Microsoft.DocumentDB/databaseAccounts@2023-04-15' = {
     locations: [
       {
         locationName: location
-        failoverPriority: 0
+      }
+    ]
+    capabilities: [
+      {
+        name: 'EnableServerless'
       }
     ]
     disableKeyBasedMetadataWriteAccess: true
@@ -350,6 +366,5 @@ resource deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01
     capacity: deployment.capacity
   }
 }]
-
 
 output url string = 'https://${webApp.properties.defaultHostName}'

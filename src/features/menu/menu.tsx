@@ -6,6 +6,7 @@ import {
   MessageCircle,
   PanelLeftClose,
   PanelRightClose,
+  Bot
 } from "lucide-react";
 import Link from "next/link";
 import { ThemeToggle } from "../theme/theme-toggle";
@@ -51,7 +52,7 @@ export const MainMenu = () => {
           variant={"outline"}
         >
           <Link href="/sysmessage" title="System Message">
-            <MessageCircle />
+            <Bot />
           </Link>
         </Button>
         {session?.user?.isAdmin ? (

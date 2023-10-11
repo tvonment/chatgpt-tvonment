@@ -10,6 +10,7 @@ import {
   CHAT_THREAD_ATTRIBUTE,
   ChatMessageModel,
   ChatThreadModel,
+  ChatProfile,
   ChatType,
   ConversationStyle,
   PromptGPTProps,
@@ -146,6 +147,7 @@ export const updateChatThreadTitle = async (
   chatThread: ChatThreadModel,
   messages: ChatMessageModel[],
   chatType: ChatType,
+  chatProfile: ChatProfile,
   conversationStyle: ConversationStyle,
   chatOverFileName: string,
   userMessage: string
@@ -154,6 +156,7 @@ export const updateChatThreadTitle = async (
     const updatedChatThread = await UpsertChatThread({
       ...chatThread,
       chatType: chatType,
+      chatProfile: chatProfile,
       chatOverFileName: chatOverFileName,
       conversationStyle: conversationStyle,
       name: userMessage.substring(0, 30),
@@ -186,7 +189,7 @@ export const CreateChatThread = async () => {
 };
 
 export const initAndGuardChatSession = async (props: PromptGPTProps) => {
-  const { messages, id, chatType, conversationStyle, chatOverFileName } = props;
+  const { messages, id, chatType, chatProfile, conversationStyle, chatOverFileName } = props;
 
   //last message
   const lastHumanMessage = messages[messages.length - 1];
@@ -198,6 +201,7 @@ export const initAndGuardChatSession = async (props: PromptGPTProps) => {
     currentChatThread,
     chats,
     chatType,
+    chatProfile,
     conversationStyle,
     chatOverFileName,
     lastHumanMessage.content

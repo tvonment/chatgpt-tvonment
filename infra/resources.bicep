@@ -86,7 +86,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
 resource webApp 'Microsoft.Web/sites@2020-06-01' = {
   name: webapp_name
   location: location
-  tags: union(tags, { 'azd-service-name': 'frontend' })
+  tags: union(tags, { 'environment': 'production' })
   properties: {
     serverFarmId: appServicePlan.id
     httpsOnly: true
@@ -179,6 +179,102 @@ resource webApp 'Microsoft.Web/sites@2020-06-01' = {
   identity: { type: 'SystemAssigned' }
 }
 
+resource webAppPreview 'Microsoft.Web/sites@2020-06-01' = {
+  name: '${webapp_name}-preview'
+  location: location
+  tags: union(tags, { 'azd-service-name': 'frontend', 'environment': 'preview' })
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      linuxFxVersion: 'node|18-lts'
+      alwaysOn: true
+      appCommandLine: 'next start'
+      ftpsState: 'Disabled'
+      minTlsVersion: '1.2'
+      appSettings: [
+        {
+          name: 'AZURE_AD_CLIENT_ID'
+          value: 'a73ee13c-6d8a-48be-b616-023c4b5032fa'
+        }
+        {
+          name: 'AZURE_AD_CLIENT_SECRET'
+          value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=AZURE-AD-CLIENT-SECRET)'
+        }
+        {
+          name: 'AZURE_AD_TENANT_ID'
+          value: '5f2f9f5d-6106-4f23-9efc-53764d492772'
+        }
+        {
+          name: 'AZURE_COSMOSDB_KEY'
+          value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=${kv::AZURE_COSMOSDB_KEY.name})'
+        }
+        {
+          name: 'AZURE_OPENAI_API_KEY'
+          value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=${kv::AZURE_OPENAI_API_KEY.name})'
+        }
+        {
+          name: 'AZURE_DOCUMENT_INTELLIGENCE_KEY'
+          value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=${kv::AZURE_DOCUMENT_INTELLIGENCE_KEY.name})'
+        }
+        {
+          name: 'AZURE_SEARCH_API_KEY'
+          value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=${kv::AZURE_SEARCH_API_KEY.name})'
+        }
+        {
+          name: 'AZURE_SEARCH_API_VERSION'
+          value: searchServiceAPIVersion
+        }
+        {
+          name: 'AZURE_SEARCH_NAME'
+          value: search_name
+        }
+        {
+          name: 'AZURE_SEARCH_INDEX_NAME'
+          value: searchServiceIndexName
+        }
+        {
+          name: 'AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT'
+          value: 'https://${location}.api.cognitive.microsoft.com/'
+        }
+        {
+          name: 'SCM_DO_BUILD_DURING_DEPLOYMENT'
+          value: 'true'
+        }
+        {
+          name: 'AZURE_COSMOSDB_URI'
+          value: cosmosDbAccount.properties.documentEndpoint
+        }
+        {
+          name: 'AZURE_OPENAI_API_INSTANCE_NAME'
+          value: openai_name
+        }
+        {
+          name: 'AZURE_OPENAI_API_DEPLOYMENT_NAME'
+          value: chatGptDeploymentName
+        }
+        {
+          name: 'AZURE_OPENAI_API_EMBEDDINGS_DEPLOYMENT_NAME'
+          value: embeddingDeploymentName
+        }
+        {
+          name: 'AZURE_OPENAI_API_VERSION'
+          value: openai_api_version
+        }
+        {
+          name: 'NEXTAUTH_SECRET'
+          value: '@Microsoft.KeyVault(VaultName=${kv.name};SecretName=${kv::NEXTAUTH_SECRET.name})'
+        }
+        {
+          name: 'NEXTAUTH_URL'
+          value: 'https://preview.chat.vonmentlen.info'
+        }
+      ]
+    }
+  }
+  identity: { type: 'SystemAssigned' }
+}
+
 resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: la_workspace_name
   location: location
@@ -204,6 +300,16 @@ resource kvFunctionAppPermissions 'Microsoft.Authorization/roleAssignments@2020-
   scope: kv
   properties: {
     principalId: webApp.identity.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: keyVaultSecretsUserRole
+  }
+}
+
+resource kvFunctionAppPreviewPermissions 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(kv.id, webAppPreview.name, keyVaultSecretsUserRole)
+  scope: kv
+  properties: {
+    principalId: webAppPreview.identity.principalId
     principalType: 'ServicePrincipal'
     roleDefinitionId: keyVaultSecretsUserRole
   }

@@ -54,14 +54,15 @@ export const options: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [...configureIdentityProvider()],
   callbacks: {
-    async jwt({token, user, account, profile, isNewUser, session}) {
+    async jwt({ token, user, account, profile, isNewUser, session }) {
       if (user?.isAdmin) {
-       token.isAdmin = user.isAdmin
+        token.isAdmin = user.isAdmin
       }
       return token
     },
-    async session({session, token, user }) {
+    async session({ session, token, user }) {
       session.user.isAdmin = token.isAdmin as string
+      session.model = process.env.AZURE_OPENAI_API_DEPLOYMENT_NAME as string
       return session
     }
   },
